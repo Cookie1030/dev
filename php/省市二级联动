@@ -59,5 +59,8 @@ mysql_select_db("cookie",$connection);
 ?>
 
 
-
-
+-----------------------------------------------------
+index.php引用了JQuery                                |
+下载地址：http://pan.baidu.com/s/1mgIQMfA            |
+《jquery-1.4.4.min.js》                              |
+-----------------------------------------------------
