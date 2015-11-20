@@ -1,0 +1,59 @@
+------------------------index.php------------------------------
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="jquery-1.4.4.min.js"></script>
+<script>
+	function sel(obj){
+	  $.get("select.php",{province:obj.options[obj.selectedIndex].value},function(json){ 
+			var city = $("#city"); 
+			$("option",city).remove(); //清空原有的选项 
+			$.each(json,function(index,array){ 
+				//alert(array.cityid);
+				var option = "<option value='"+array.cityid+"'>"+array.city+"</option>"; 
+				city.append(option); 
+			}); 
+		},'json'); 
+	}
+</script>
+
+<?
+$connection=mysql_connect("localhost","root","cookie"); //连接并选择数据库服务器 
+mysql_query("set names utf8");
+mysql_select_db("cookie",$connection); 
+?>
+
+<label>省份：</label> 
+<select name="province" id="province" onchange="sel(this)">
+			  <option value ="0">---请选择省份---</option>
+	<?
+		$query="select * from province"; 
+		$result=mysql_query($query,$connection); 
+		while($row=mysql_fetch_array($result)) 
+		{ 
+	?>
+			  <option value ="<? echo $row[provinceid]; ?>"><? echo $row[province] ?></option>
+	<?
+		} 
+	?>
+</select>
+<label>城市：</label> 
+<select name="city" id="city">
+		  <option value ="0">---请选择城市---</option>
+ </select>
+		  
+	
+--------------------------select.php----------------------------
+<?
+		$connection=mysql_connect("localhost","root","cookie"); //连接并选择数据库服务器 
+		mysql_query("set names utf8");
+		mysql_select_db("cookie",$connection); 	
+		
+		$proid = $_GET["province"]; 
+			if(isset($proid)){ 
+				$q=mysql_query("select * from city where provinceid = $proid"); 
+				while($row=mysql_fetch_array($q)){ 
+					$select[] = array("cityid"=>$row[cityid],"city"=>$row[city]); 
+				} 
+				//var_dump($select);
+			 echo json_encode($select); 
+			}
+?>
